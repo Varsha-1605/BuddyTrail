@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuddyTrail - User Content and Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+               @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .main-head {
+            background-color: var(--primary-color);
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        #logo-web {
+            height: 30px;
+            margin-right: 0.5rem;
+        }
+
+        #logo {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin-left: 1rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .review-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-form {
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .review-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-form h2, .reviews h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .star-rating {
+            display: inline-block;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            float: right;
+            padding: 0 2px;
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffca08;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .review-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .review-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-item .rating {
+            color: #ffca08;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-item .user-info {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .moderation-panel {
+            background-color: #e9ecef;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-color);
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+
+            .dropdown-close-btn {
+                display: block;
+                text-align: right;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+
+        .content-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .content-form, .review-form {
+            flex: 1 1 45%;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .content-item, .review-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .content-item img, .review-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            background-color: #f1f1f1;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Additional styles... */
+    </style>
+</head>
+<body>
+    <!-- Header and navigation remain unchanged -->
+    <header class="main-head">
+        <nav>
+            <div class="logo">
+                <img src="img/logo.png" id="logo-web" alt="BuddyTrail Logo">
+                <h1 id="logo">BuddyTrail</h1>
+            </div>
+
+            <button class="hamburger" id="hamburger">☰</button>
+
+            <ul id="nav-list">
+                <span class="dropdown-close-btn" id="closeBtn">×</span>
+                <li><a href="index.html" class="navhover">Home</a></li>
+                
+            </ul>
+
+            <button class="mode-toggle" id="modeToggle">
+                <span class="sun-icon glow">☀️</span>
+            </button>
+        </nav>
+    </header>
+      <!-- JS to handle hamburger and close button -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const hamburger = document.getElementById("hamburger");
+      const navList = document.getElementById("nav-list");
+      const closeBtn = document.getElementById("closeBtn");
+  
+      hamburger.addEventListener("click", function () {
+        navList.classList.toggle("active");
+      });
+  
+      closeBtn.addEventListener("click", function () {
+        navList.classList.remove("active");
+      });
+    });
+  </script>
+
+    <main>
+        <section id="user-content" class="review-container">
+            <div class="tab-container">
+                <button class="tab active" data-tab="share-content">Share Experience</button>
+                <button class="tab" data-tab="write-review">Write Review</button>
+            </div>
+
+            <div class="content-container">
+                <div id="share-content" class="content-form content-section active">
+                    <h2>Share Your Travel Experience</h2>
+                    <form id="contentForm">
+                        <div class="form-group">
+                            <label for="contentTitle">Title of Your Experience:</label>
+                            <input type="text" id="contentTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentLocation">Location:</label>
+                            <input type="text" id="contentLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentType">Type of Experience:</label>
+                            <select id="contentType" required>
+                                <option value="">Select type</option>
+                                <option value="adventure">Adventure</option>
+                                <option value="cultural">Cultural</option>
+                                <option value="relaxation">Relaxation</option>
+                                <option value="food">Food & Cuisine</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentText">Share Your Experience:</label>
+                            <textarea id="contentText" rows="6" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentImage">Upload an Image:</label>
+                            <input type="file" id="contentImage" accept="image/*">
+                        </div>
+                        <button type="submit" class="submit-btn">Share Experience</button>
+                    </form>
+                </div>
+
+                <div id="write-review" class="review-form content-section">
+                    <h2>Write a Review</h2>
+                    <form id="reviewForm">
+                    <div class="form-group">
+                        <label for="reviewType">Review Type:</label>
+                        <select id="reviewType" required>
+                            <option value="">Select type</option>
+                            <option value="destination">Travel Destination</option>
+                            <option value="accommodation">Accommodation</option>
+                            <option value="experience">Travel Experience</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewName">Name of Place/Experience:</label>
+                        <input type="text" id="reviewName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rating:</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                            <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewText">Your Review:</label>
+                        <textarea id="reviewText" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Review</button>
+                </form>
+                </div>
+            </div>
+
+            <div class="content-section active">
+                <h2>Travel Experiences and Reviews</h2>
+                <div id="contentList">
+                    <!-- User-generated content and reviews will be dynamically added here -->
+                </div>
+            </div>
+
+            <div class="moderation-panel fade-in">
+                <h2>Moderation Panel</h2>
+                <div id="moderationList">
+                    <!-- Pending content for moderation will be added here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer remains unchanged -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 BuddyTrail. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Existing functions for star ratings and notifications...
+        // Function to load reviews from localStorage
+        function loadReviews() {
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+            const reviewsList = document.getElementById('reviewsList');
+            reviewsList.innerHTML = ''; // Clear existing reviews
+
+            reviews.forEach(review => {
+                const reviewElement = createReviewElement(review);
+                reviewsList.appendChild(reviewElement);
+            });
+        }
+
+        // Function to create a review element
+        function createReviewElement(review) {
+            const reviewElement = document.createElement('div');
+            reviewElement.className = 'review-item fade-in';
+            reviewElement.innerHTML = `
+                <div class="user-info">${review.type.charAt(0).toUpperCase() + review.type.slice(1)} Review</div>
+                <div class="rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                <strong>${review.name}</strong>
+                <p>${review.text}</p>
+            `;
+            return reviewElement;
+        }
+
+        // Function to save a new review
+        function saveReview(review) {
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+            reviews.unshift(review); // Add new review to the beginning of the array
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+        }
+
+        // Event listener for form submission
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const type = document.getElementById('reviewType').value;
+            const name = document.getElementById('reviewName').value;
+            const rating = parseInt(document.querySelector('input[name="rating"]:checked').value);
+            const text = document.getElementById('reviewText').value;
+
+            // Create new review object
+            const newReview = { type, name, rating, text };
+
+            // Save the new review
+            saveReview(newReview);
+
+            // Add new review to the list
+            const reviewElement = createReviewElement(newReview);
+            document.getElementById('reviewsList').prepend(reviewElement);
+
+            // Clear form
+            this.reset();
+
+            // Show success message
+            showNotification('Review submitted successfully!');
+        });
+
+        // Function to show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            // notification.style.backgroundColor = var(--secondary-color);
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s ease';
+
+            document.body.appendChild(notification);
+
+            // Fade in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+            }, 10);
+
+            // Fade out and remove
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Load reviews when the page loads
+        window.addEventListener('load', loadReviews);
+
+        // Function to handle tab switching
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Function to load content from localStorage
+        function loadContent() {
+            const content = JSON.parse(localStorage.getItem('userContent')) || [];
+            const contentList = document.getElementById('contentList');
+            contentList.innerHTML = ''; // Clear existing content
+
+            content.forEach(item => {
+                if (item.status === 'approved') {
+                    const contentElement = createContentElement(item);
+                    contentList.appendChild(contentElement);
+                }
+            });
+        }
+
+        // Function to create a content element
+        function createContentElement(item) {
+            const contentElement = document.createElement('div');
+            contentElement.className = item.type === 'review' ? 'review-item fade-in' : 'content-item fade-in';
+            
+            if (item.type === 'review') {
+                contentElement.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <div class="rating">
+                        <div class="rating-category">
+                            <span>Overall</span>
+                            ${'★'.repeat(item.overallRating)}${'☆'.repeat(5-item.overallRating)}
+                        </div>
+                        <!-- Other rating categories... -->
+                    </div>
+                    <p>${item.text}</p>
+                `;
+            } else {
+                contentElement.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <p><strong>Location:</strong> ${item.location}</p>
+                    <p><strong>Type:</strong> ${item.experienceType}</p>
+                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
+                    <p>${item.text}</p>
+                `;
+            }
+            
+            return contentElement;
+        }
+
+        // Function to save new content
+        function saveContent(item) {
+            const content = JSON.parse(localStorage.getItem('userContent')) || [];
+            content.unshift(item); // Add new content to the beginning of the array
+            localStorage.setItem('userContent', JSON.stringify(content));
+        }
+
+        // Function to load content for moderation
+        function loadModerationContent() {
+            const content = JSON.parse(localStorage.getItem('userContent')) || [];
+            const moderationList = document.getElementById('moderationList');
+            moderationList.innerHTML = ''; // Clear existing content
+
+            content.forEach((item, index) => {
+                if (item.status === 'pending') {
+                    const contentElement = createModerationContentElement(item, index);
+                    moderationList.appendChild(contentElement);
+                }
+            });
+        }
+
+        // Function to create a moderation content element
+        function createModerationContentElement(item, index) {
+            const contentElement = document.createElement('div');
+            contentElement.className = item.type === 'review' ? 'review-item fade-in' : 'content-item fade-in';
+            
+            // Similar to createContentElement, but with moderation controls
+            contentElement.innerHTML = `
+                <!-- Content display similar to createContentElement -->
+                <div class="moderation-controls">
+                    <button class="moderation-btn approve-btn" onclick="approveContent(${index})">Approve</button>
+                    <button class="moderation-btn reject-btn" onclick="rejectContent(${index})">Reject</button>
+                </div>
+            `;
+            
+            return contentElement;
+        }
+
+        // Functions to approve and reject content
+        function approveContent(index) {
+            const content = JSON.parse(localStorage.getItem('userContent')) || [];
+            content[index].status = 'approved';
+            localStorage.setItem('userContent', JSON.stringify(content));
+            loadModerationContent();
+            loadContent();
+            showNotification('Content approved successfully!');
+        }
+
+        function rejectContent(index) {
+            const content = JSON.parse(localStorage.getItem('userContent')) || [];
+            content.splice(index, 1);
+            localStorage.setItem('userContent', JSON.stringify(content));
+            loadModerationContent();
+            showNotification('Content rejected and removed.');
+        }
+
+        // Event listener for content form submission
+        document.getElementById('contentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('contentTitle').value;
+            const location = document.getElementById('contentLocation').value;
+            const experienceType = document.getElementById('contentType').value;
+            const text = document.getElementById('contentText').value;
+            const imageFile = document.getElementById('contentImage').files[0];
+
+            const newContent = { 
+                type: 'experience',
+                title, 
+                location, 
+                experienceType, 
+                text,
+                status: 'pending'
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    newContent.image = reader.result;
+                    saveContent(newContent);
+                    showNotification('Experience submitted for moderation!');
+                    loadModerationContent();
+                    e.target.reset();
+                }
+                reader.readAsDataURL(imageFile);
+            } else {
+                saveContent(newContent);
+                showNotification('Experience submitted for moderation!');
+                loadModerationContent();
+                e.target.reset();
+            }
+        });
+
+        // Event listener for review form submission
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Similar to the existing review submission logic, but update to match the new content structure
+            const newReview = {
+                type: 'review',
+                // ... other review fields
+                status: 'pending'
+            };
+
+            saveContent(newReview);
+            showNotification('Review submitted for moderation!');
+            loadModerationContent();
+            e.target.reset();
+        });
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            setupTabs();
+            loadContent();
+            loadModerationContent();
+        });
+    </script>
+</body>
+</html>
